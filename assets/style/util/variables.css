@@ -1,4 +1,9 @@
 :root {
-  --main-color: black;
-  --secondary-color: #fbc403;
+  --main-black: #272727;
+  --secondary-black: #44444485;
+  --main-yellow: #fed432;
+  --main-white: white;
+
+  --title-font: "Oswald", sans-serif;
+  --base-font: "Kanit", sans-serif;
 }

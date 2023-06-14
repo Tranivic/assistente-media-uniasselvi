@@ -1,12 +1,56 @@
 @import "./util/variables.css";
-@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit&family=Oswald:wght@400;600&display=swap");
 
 body {
-  background-color: var(--main-color);
+  background-color: var(--main-black);
   color: white;
-  font-family: "Kanit", sans-serif;
 }
 
+.page {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+}
+.page > header {
+  font-family: var(--title-font);
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 10rem;
+  background-color: var(--main-yellow);
+  color: var(--main-black);
+  align-items: center;
+  padding: 15rem 0;
+}
+.page > header > h1 {
+  font-size: 5rem;
+  padding: 1rem 0;
+  font-weight: 600;
+}
+.user-name {
+  background-color: var(--main-black);
+  color: var(--main-white);
+  font-size: 4rem;
+  padding: 0 1rem;
+}
+.page > header > h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  padding: 5rem 2rem;
+  color: var(--secondary-black);
+  font-weight: 400;
+  font-family: var(--base-font);
+}
+
+.page > main {
+  background-color: red;
+}
+
+/* modal-related */
 .modal {
   position: absolute;
   width: 100%;
@@ -14,7 +58,7 @@ body {
   align-items: center;
   flex-direction: column;
   justify-content: space-around;
-  background-color: var(--main-color);
+  background-color: var(--main-black);
 }
 .show {
   display: flex;
