@@ -27,7 +27,7 @@
     <!-- Page structure -->
     <section class="page">
       <header>
-        <h1 id="page-title">Olá, <mark class="user-name">Victor Trani</mark>.</h1>
+        <h1 id="page-title">Olá, <mark id="user-name" class="user-name">User</mark>.</h1>
         <h2>Com o nosso sistema, é fácil e intuitivo controlar e acompanhar suas
           notas na Uniasselvi. Essa ferramenta foi desenvolvida para ajudar você
           a manter-se atualizado sobre seu desempenho acadêmico, permitindo que
@@ -39,22 +39,21 @@
       <main>
         <div class="form-container">
           <h1>Insira as notas nos campos abaixo para calcular a estimativa das
-            médias das matérias.</h1>
-          <form class="subject-form">
+            médias das matérias. Inclua somente as notas que você já possui.</h1>
+          <h2>Lembrando que as notas seguem o padrão de peso e média da
+            Uniasselvi. Adicione pelo menos 1 nota.</h2>
+          <form class="subject-form" id="subject-form">
             <label for="subject-name">Nome da matéria</label>
             <input type="text" id="subject-name" name="subject-name">
             <label for="score1">Nota 1</label>
-            <input type="number" id="score1" name="score1">
+            <input type="number" id="score-1" name="score1">
             <label for="score2">Nota 2</label>
-            <input type="number" id="score2" name="score2">
+            <input type="number" id="score-2" name="score2">
             <label for="score3">Nota 3</label>
-            <input type="number" id="score3" name="score3">
+            <input type="number" id="score-3" name="score3">
             <label for="score4">Nota 4</label>
-            <input type="number" id="score4" name="score4">
-            <div class="status-message-preview">
-              <span>Você esta bem, passou com 8.7 de média</span>
-            </div>
-            <button type="submit">Salvar Estimativa</button>
+            <input type="number" id="score-4" name="score4">
+            <button type="submit">Cadastrar Matéria</button>
           </form>
         </div>
         <!-- <ul class="saved-subjects-list">

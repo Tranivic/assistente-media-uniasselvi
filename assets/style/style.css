@@ -24,7 +24,7 @@ body {
   background-color: var(--main-yellow);
   color: var(--main-black);
   align-items: center;
-  padding: 15rem 0;
+  padding: 10rem 0;
 }
 .page > header > h1 {
   font-size: 5rem;
@@ -47,9 +47,58 @@ body {
 }
 
 .page > main {
-  background-color: red;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+}
+.page > main > .form-container {
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.page > main > .form-container > h1 {
+  font-family: var(--title-font);
+  font-size: 2rem;
+}
+.page > main > .form-container > h2 {
+  font-family: var(--base-font);
+  font-size: 1.5rem;
+  padding-top: 1rem;
 }
 
+.page > main > .form-container > form {
+  border-radius: 1.5rem;
+  font-family: var(--base-font);
+  font-size: 1.5rem;
+  background-color: var(--secondary-black);
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  margin-top: 4rem;
+  font-size: 2rem;
+  justify-content: center;
+  padding: 4rem 8rem;
+}
+.page > main > .form-container > form > button {
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  align-self: center;
+  padding: 1rem;
+}
+.page > main > .form-container > form > input {
+  font-family: var(--base-font);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  outline: none;
+  width: 90%;
+  margin: 1.5rem 0;
+  padding: 1rem;
+}
 /* modal-related */
 .modal {
   position: absolute;
@@ -59,6 +108,7 @@ body {
   flex-direction: column;
   justify-content: space-around;
   background-color: var(--main-black);
+  z-index: 1000;
 }
 .show {
   display: flex;
