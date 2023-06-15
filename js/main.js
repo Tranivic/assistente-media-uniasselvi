@@ -7,14 +7,17 @@ const subjectForm = document.getElementById('subject-form');
 
 // Global variables
 let userName = null;
-let newSubject = {
-    name: '',
-    score1: null,
-    score2: null,
-    score3: null,
-    score4: null,
-    statusMsg: '',
 
+let subjectObj = {
+    name: '',
+    scores: {
+        score1: null,
+        score2: null,
+        score3: null,
+        score4: null,
+    },
+    average: null,
+    statusMsg: '',
 };
 
 // Modal variables
@@ -61,21 +64,33 @@ function setUsernameOnScreen() {
 }
 function submitSubject(event) {
     event.preventDefault();
-    saveNewSubject();
-    console.log(newSubject);
+    setSubjectObj();
 }
 
-function saveNewSubject() {
-    newSubject = {
-        name: document.getElementById('subject-name').value,
-        score1: document.getElementById('score-1').value,
-        score2: document.getElementById('score-2').value,
-        score3: document.getElementById('score-3').value,
-        score4: document.getElementById('score-4').value,
-        statusMessage: generateStatusMsg(),
-    };
-}
+function setSubjectObj() {
+    const subjectName = document.getElementById('subject-name').value;
+    const N1 = parseFloat(document.getElementById('score-1').value);
+    const N2 = parseFloat(document.getElementById('score-2').value);
+    const N3 = parseFloat(document.getElementById('score-3').value);
+    const N4 = parseFloat(document.getElementById('score-4').value);
+    const scores = [N1, N2, N3, N4];
+    const isAllScoresFilled = scores.every(score => !isNaN(score));
+    let subjectAverage = null;
+    let subjectStatusMsg = '';
 
-function generateStatusMsg() {
-    return 'Satus message';
+
+    if (isAllScoresFilled) {
+
+        subjectAverage = ((N1 * 1.5) + (N2 * 1.5) + (N3 * 4) + (N4 * 3)) / 10;
+
+        if (subjectAverage >= 7) {
+            subjectStatusMsg = 'Você passou nessa matéria. Atingiu todos os pontos necessários.';
+        } else {
+            subjectStatusMsg = 'Você não passou nessa matéria. Não atingiu todos os pontos necessários.';
+        }
+
+    } else {
+        const minimumScoreNeeded = 'Waiting...';
+        subjectStatusMsg = `Você precisa obter no mínimo ${minimumScoreNeeded} para passar na matéria.`;
+    }
 }

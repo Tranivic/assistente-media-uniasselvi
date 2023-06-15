@@ -54,6 +54,8 @@ body {
   padding: 3rem 0;
 }
 .page > main > .form-container {
+  width: 100%;
+  background-color: red;
   background-color: transparent;
   display: flex;
   justify-content: center;
@@ -77,12 +79,13 @@ body {
   background-color: var(--secondary-black);
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
   flex-direction: column;
   margin-top: 4rem;
   font-size: 2rem;
   justify-content: center;
   padding: 4rem 8rem;
+  width: 40%;
 }
 .page > main > .form-container > form > button {
   margin-top: 1rem;
@@ -95,8 +98,8 @@ body {
   border-radius: 0.5rem;
   text-decoration: none;
   outline: none;
-  width: 90%;
   margin: 1.5rem 0;
+  width: 100%;
   padding: 1rem;
 }
 /* modal-related */
