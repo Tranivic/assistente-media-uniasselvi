@@ -86,33 +86,28 @@ function setSubjectObj() {
 
         console.log(subjectStatusMsg);
     } else {
-        const scoreFilledAtTheMoment = [];
-        const missingScoreAtTheMoment = [];
+        const scoreFilled = [];
+        const scoreNotFilled = [];
 
         scores.forEach((element, index) => {
             if (!isNaN(element)) {
                 if (index === 0 || index === 1) {
-                    scoreFilledAtTheMoment.push(element * 1.5);
+                    scoreFilled.push(element * 1.5);
                 } else if (index === 2) {
-                    scoreFilledAtTheMoment.push(element * 4);
+                    scoreFilled.push(element * 4);
                 } else {
-                    scoreFilledAtTheMoment.push(element * 3);
+                    scoreFilled.push(element * 3);
                 }
             } else {
-                missingScoreAtTheMoment.push(`N${index + 1}`);
+                scoreNotFilled.push(`N${index + 1}`);
             }
         });
 
-        const totalScore = scoreFilledAtTheMoment.reduce((total, number) => total + number, 0);
+        const totalScore = scoreFilled.reduce((total, number) => total + number, 0);
         const missingScoreTotal = Math.ceil(Math.abs(totalScore - 70));
 
-        console.log(scoreFilledAtTheMoment);
-        console.log(missingScoreAtTheMoment);
-        console.log(totalScore);
-        console.log(missingScoreTotal);
-
-        if (missingScoreAtTheMoment.length === 1) {
-            missingScoreAtTheMoment.forEach((element) => {
+        if (scoreNotFilled.length === 1) {
+            scoreNotFilled.forEach((element) => {
                 if (element === 'N1') {
                     console.log(Math.ceil(missingScoreTotal / 1.5));
                 }
@@ -126,61 +121,126 @@ function setSubjectObj() {
                     console.log(missingScoreTotal / 3);
                 }
             });
-        } else {
-            if (missingScoreAtTheMoment.includes('N1') && missingScoreAtTheMoment.includes('N2')) {
-                const leftScore = ((missingScoreTotal / 1.5) / 2).toFixed(1);
-                console.log(`Você precisa tirar pelo menos ${leftScore} na N1 e N2`);
-            }
-            if (missingScoreAtTheMoment.includes('N3') && missingScoreAtTheMoment.includes('N4')) {
-                let leftScore = Math.ceil(missingScoreTotal / 2);
-                let leftScoreN3Hold = Math.ceil(leftScore / 4);
+        } else if (scoreNotFilled.length > 1) {
+            if (scoreNotFilled.includes('N1') && scoreNotFilled.includes('N2')) {
+                let leftScore = Math.ceil(missingScoreTotal);
+                let leftScoreN1Hold = 1;
+                let leftScoreN2Hold = 1;
 
-                if (leftScoreN3Hold > 10) {
-                    leftScore += (leftScoreN3Hold - 10) * 4;
-                    leftScoreN3Hold = 10;
+                for (let i = 0; i < leftScore; i++) {
+                    const scoreAchive = ((leftScoreN1Hold * 1.5) + (leftScoreN2Hold * 1.5));
+                    if (scoreAchive < leftScore) {
+                        leftScoreN1Hold = leftScoreN1Hold + 1;
+                        leftScoreN2Hold = leftScoreN2Hold + 1;
+                    }
                 }
 
-                let leftScoreN4Hold = Math.ceil(leftScore / 3);
+                if (leftScoreN1Hold > 10 || leftScoreN2Hold > 10) {
+                    console.log('Infelizmente você ja está automaticamente reprovado na diciplina');
+                    return;
+                }
+                console.log(`Você precisa tirar pelo menos ${leftScoreN1Hold} na N1.`);
+                console.log(`Você precisa tirar pelo menos ${leftScoreN2Hold} na N4.`);
+            }
+            if (scoreNotFilled.includes('N3') && scoreNotFilled.includes('N4')) {
+                let leftScore = Math.ceil(missingScoreTotal);
+                let leftScoreN3Hold = 1;
+                let leftScoreN4Hold = 1;
+                for (let i = 0; i < leftScore; i++) {
+                    const scoreAchive = ((leftScoreN3Hold * 4) + (leftScoreN4Hold * 3));
+                    if (scoreAchive < leftScore) {
+                        leftScoreN3Hold = leftScoreN3Hold + 1;
+                        leftScoreN4Hold = leftScoreN4Hold + 1;
+                    }
+                }
+
+                if (leftScoreN3Hold > 10 || leftScoreN4Hold > 10) {
+                    console.log('Infelizmente você ja está automaticamente reprovado na diciplina');
+                    return;
+                }
 
                 console.log(`Você precisa tirar pelo menos ${leftScoreN3Hold} na N3.`);
                 console.log(`Você precisa tirar pelo menos ${leftScoreN4Hold} na N4.`);
             }
-            if (missingScoreAtTheMoment.includes('N1') && missingScoreAtTheMoment.includes('N3')) {
-                let leftScore = Math.ceil(missingScoreTotal / 2);
-                let leftScoreN1Hold = Math.ceil(leftScore / 1.5);
+            if (scoreNotFilled.includes('N1') && scoreNotFilled.includes('N3')) {
+                let leftScore = Math.ceil(missingScoreTotal);
+                let leftScoreN1Hold = 1;
+                let leftScoreN3Hold = 1;
 
-                if (leftScoreN1Hold > 10) {
-                    leftScore += leftScoreN1Hold - 10;
-                    leftScoreN1Hold = 10;
+                for (let i = 0; i < leftScore; i++) {
+                    const scoreAchive = ((leftScoreN1Hold * 1.5) + (leftScoreN3Hold * 4));
+                    if (scoreAchive < leftScore) {
+                        leftScoreN1Hold = leftScoreN1Hold + 1;
+                        leftScoreN3Hold = leftScoreN3Hold + 1;
+                    }
                 }
 
-                let leftScoreN3Hold = Math.ceil(leftScore / 4);
-
-
-                console.log(`Você precisa tirar pelo menos ${leftScoreN1Hold - 2} na N1.`);
-                console.log(`Você precisa tirar pelo menos ${leftScoreN3Hold + 1} na N3.`);
+                if (leftScoreN1Hold > 10 || leftScoreN3Hold > 10) {
+                    console.log('Infelizmente você ja está automaticamente reprovado na diciplina');
+                    return;
+                }
+                console.log(`Você precisa tirar pelo menos ${leftScoreN1Hold} na N1.`);
+                console.log(`Você precisa tirar pelo menos ${leftScoreN3Hold} na N3.`);
             }
-            if (missingScoreAtTheMoment.includes('N2') && missingScoreAtTheMoment.includes('N4')) {
-                let leftScore = Math.ceil(missingScoreTotal / 2);
-                let leftScoreN2Hold = Math.ceil(leftScore / 1.5);
+            if (scoreNotFilled.includes('N2') && scoreNotFilled.includes('N4')) {
+                let leftScore = Math.ceil(missingScoreTotal);
+                let leftScoreN2Hold = 1;
+                let leftScoreN4Hold = 1;
 
-                if (leftScoreN2Hold > 10) {
-                    leftScore += leftScoreN2Hold - 10;
-                    leftScoreN2Hold = 10;
+                for (let i = 0; i < leftScore; i++) {
+                    const scoreAchive = ((leftScoreN2Hold * 1.5) + (leftScoreN4Hold * 3));
+                    if (scoreAchive < leftScore) {
+                        leftScoreN2Hold = leftScoreN2Hold + 1;
+                        leftScoreN4Hold = leftScoreN4Hold + 1;
+                    }
                 }
 
-                let leftScoreN4Hold = Math.ceil(leftScore / 3);
-
-
-                console.log(`Você precisa tirar pelo menos ${leftScoreN2Hold - 2} na N2.`);
-                console.log(`Você precisa tirar pelo menos ${leftScoreN4Hold + 1} na N4.`);
+                if (leftScoreN2Hold > 10 || leftScoreN4Hold > 10) {
+                    console.log('Infelizmente você ja está automaticamente reprovado na diciplina');
+                    return;
+                }
+                console.log(`Você precisa tirar pelo menos ${leftScoreN2Hold} na N2.`);
+                console.log(`Você precisa tirar pelo menos ${leftScoreN4Hold} na N4.`);
             }
+            if (scoreNotFilled.includes('N1') && scoreNotFilled.includes('N4')) {
+                let leftScore = Math.ceil(missingScoreTotal);
+                let leftScoreN1Hold = 1;
+                let leftScoreN4Hold = 1;
 
-            if (missingScoreAtTheMoment.includes('N1') && missingScoreAtTheMoment.includes('N4')) {
+                for (let i = 0; i < leftScore; i++) {
+                    const scoreAchive = ((leftScoreN1Hold * 1.5) + (leftScoreN4Hold * 3));
+                    if (scoreAchive < leftScore) {
+                        leftScoreN1Hold = leftScoreN1Hold + 1;
+                        leftScoreN4Hold = leftScoreN4Hold + 1;
+                    }
+                }
 
+                if (leftScoreN1Hold > 10 || leftScoreN4Hold > 10) {
+                    console.log('Infelizmente você ja está automaticamente reprovado na diciplina');
+                    return;
+                }
+                console.log(`Você precisa tirar pelo menos ${leftScoreN1Hold} na N1.`);
+                console.log(`Você precisa tirar pelo menos ${leftScoreN4Hold} na N4.`);
             }
-            if (missingScoreAtTheMoment.includes('N2') && missingScoreAtTheMoment.includes('N3')) {
+            if (scoreNotFilled.includes('N2') && scoreNotFilled.includes('N3')) {
+                let leftScore = Math.ceil(missingScoreTotal);
+                let leftScoreN1Hold = 1;
+                let leftScoreN4Hold = 1;
 
+                for (let i = 0; i < leftScore; i++) {
+                    const scoreAchive = ((leftScoreN1Hold * 1.5) + (leftScoreN4Hold * 4));
+                    if (scoreAchive < leftScore) {
+                        leftScoreN1Hold = leftScoreN1Hold + 1;
+                        leftScoreN4Hold = leftScoreN4Hold + 1;
+                    }
+                }
+
+                if (leftScoreN1Hold > 10 || leftScoreN4Hold > 10) {
+                    console.log('Infelizmente você ja está automaticamente reprovado na diciplina');
+                    return;
+                }
+                console.log(`Você precisa tirar pelo menos ${leftScoreN1Hold} na N1.`);
+                console.log(`Você precisa tirar pelo menos ${leftScoreN4Hold} na N4.`);
             }
         }
     }
