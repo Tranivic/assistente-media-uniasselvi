@@ -7,19 +7,7 @@ const subjectForm = document.getElementById('subject-form');
 
 // Global variables
 let userName = null;
-
-let subjectObj = {
-    name: '',
-    scores: {
-        score1: null,
-        score2: null,
-        score3: null,
-        score4: null,
-    },
-    average: null,
-    statusMsg: '',
-    aproved: false,
-};
+let lastSubjectObj = {};
 
 // Modal variables
 const modalForm = document.getElementById('modal-form');
@@ -67,12 +55,13 @@ function submitSubject(event) {
 
 function calculateSubjectStatus() {
     const inputSubjectName = document.getElementById('subject-name').value;
-    const score1 = parseFloat(document.getElementById('score-1').value);
-    const score2 = parseFloat(document.getElementById('score-2').value);
-    const score3 = parseFloat(document.getElementById('score-3').value);
-    const score4 = parseFloat(document.getElementById('score-4').value);
+    const score1 = parseInt(document.getElementById('score-1').value);
+    const score2 = parseInt(document.getElementById('score-2').value);
+    const score3 = parseInt(document.getElementById('score-3').value);
+    const score4 = parseInt(document.getElementById('score-4').value);
     const scoreArray = [score1, score2, score3, score4];
     const areAllScoresFilled = scoreArray.every(score => !isNaN(score));
+
     let calculatedAverage = null;
     let statusMessage = '';
 
@@ -80,13 +69,10 @@ function calculateSubjectStatus() {
         calculatedAverage = ((score1 * 1.5) + (score2 * 1.5) + (score3 * 4) + (score4 * 3)) / 10;
 
         if (calculatedAverage >= 7) {
-            statusMessage = 'Pass';
+            subjectObjConstructor(scoreArray, 'Você foi aprovado na diciplina.', calculatedAverage, inputSubjectName);
         } else {
-            statusMessage = 'Fail';
+            subjectObjConstructor(scoreArray, 'Infelizmente você não atingiu os pontos necessários na diciplina.', calculatedAverage, inputSubjectName);
         }
-
-        console.log(statusMessage);
-        console.log(calculatedAverage);
     } else {
         const filledScores = [];
         const unfilledScores = [];
@@ -115,29 +101,35 @@ function calculateSubjectStatus() {
                 const missingScore = Math.ceil(remainingScoreTotal / divisor);
 
                 if (missingScore <= 10) {
-                    console.log(`You need to score at least ${Math.ceil(remainingScoreTotal / divisor)} on ${score}.`);
+                    subjectObjConstructor(scoreArray, `Você precisa tirar pelo menos ${Math.ceil(remainingScoreTotal / divisor)} na nota ${score}.`, calculatedAverage, inputSubjectName, true);
                 } else {
-                    console.log(`Not enough ${score} score to pass...`);
+                    subjectObjConstructor(scoreArray, `Infelizmente você não ira atingir os pontos necessários na diciplina.`, calculatedAverage, inputSubjectName, false);
                 }
             });
         } else {
             if (unfilledScores.includes('score1') && unfilledScores.includes('score2')) {
-                console.log(calculateRequiredScores(1.5, 1.5, remainingScoreTotal));
+                const calculateResponse = calculateRequiredScores(1.5, 1.5, remainingScoreTotal);
+                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score3') && unfilledScores.includes('score4')) {
-                console.log(calculateRequiredScores(4, 3, remainingScoreTotal));
+                const calculateResponse = calculateRequiredScores(4, 3, remainingScoreTotal);
+                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score1') && unfilledScores.includes('score3')) {
-                console.log(calculateRequiredScores(1.5, 4, remainingScoreTotal));
+                const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
+                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score2') && unfilledScores.includes('score4')) {
-                console.log(calculateRequiredScores(1.5, 3, remainingScoreTotal));
+                const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
+                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score1') && unfilledScores.includes('score4')) {
-                console.log(calculateRequiredScores(1.5, 3, remainingScoreTotal));
+                const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
+                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score2') && unfilledScores.includes('score3')) {
-                console.log(calculateRequiredScores(1.5, 4, remainingScoreTotal));
+                const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
+                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
         }
     }
@@ -159,8 +151,31 @@ function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
     }
 
     if (requiredScore1 > 10) {
-        return 'Unfortunately, you are already automatically failing the subject.';
+        return { message: 'Infelizmente você não ira atingir os pontos necessários na diciplina.', toHold: false };
     } else {
-        return `$These are the 2 scores ${requiredScore1} and ${requiredScore2}`;
+        return { message: `Voce precisa tirar ${requiredScore1} e ${requiredScore2} nas avaliações não feitas.`, toHold: true };
     }
+}
+
+function subjectObjConstructor(scores, statusMessage, averageValue, subjectName, isHolding) {
+    const subjectObj = {
+        name: subjectName,
+        scores: {
+            score1: scores[0],
+            score2: scores[1],
+            score3: scores[2],
+            score4: scores[3],
+        },
+        average: averageValue,
+        statusMsg: statusMessage,
+        approved: averageValue >= 7,
+        hold: isHolding,
+    };
+    console.log(subjectObj);
+}
+
+
+
+function validateForm() {
+
 }

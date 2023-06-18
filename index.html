@@ -44,22 +44,29 @@
             Uniasselvi. Adicione pelo menos 2 notas.</h2>
           <form class="subject-form" id="subject-form">
             <label for="subject-name">Nome da matéria</label>
-            <input type="text" id="subject-name" name="subject-name">
+            <input required type="text" id="subject-name" name="subject-name">
+
             <label for="score1">Nota 1</label>
-            <input placeholder="Deixe em branco se não fez a prova..."
+            <input min="0" max="10"
+              placeholder="Deixe em branco se não fez a prova..."
               type="number" id="score-1" name="score1">
             <label for="score2">Nota 2</label>
-            <input placeholder="Deixe em branco se não fez a prova..."
+            <input min="0" max="10"
+              placeholder="Deixe em branco se não fez a prova..."
               type="number" id="score-2" name="score2">
             <label for="score3">Nota 3</label>
-            <input placeholder="Deixe em branco se não fez a prova..."
+            <input min="0" max="10"
+              placeholder="Deixe em branco se não fez a prova..."
               type="number" id="score-3" name="score3">
             <label for="score4">Nota 4</label>
-            <input placeholder="Deixe em branco se não fez a prova..."
+            <input min="0" max="10"
+              placeholder="Deixe em branco se não fez a prova..."
               type="number" id="score-4" name="score4">
+
             <button type="submit">Cadastrar Matéria</button>
           </form>
         </div>
+
         <!-- <ul class="saved-subjects-list">
           <li class="score-item">
             <h1>Programação Web II</h1>
