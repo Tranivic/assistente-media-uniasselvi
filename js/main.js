@@ -18,6 +18,7 @@ let subjectObj = {
     },
     average: null,
     statusMsg: '',
+    aproved: false,
 };
 
 // Modal variables
@@ -72,7 +73,6 @@ function calculateSubjectStatus() {
     const score4 = parseFloat(document.getElementById('score-4').value);
     const scoreArray = [score1, score2, score3, score4];
     const areAllScoresFilled = scoreArray.every(score => !isNaN(score));
-
     let calculatedAverage = null;
     let statusMessage = '';
 
@@ -122,129 +122,45 @@ function calculateSubjectStatus() {
             });
         } else {
             if (unfilledScores.includes('score1') && unfilledScores.includes('score2')) {
-                let remainingScore = Math.ceil(remainingScoreTotal);
-                let requiredScoreN1 = 1;
-                let requiredScoreN2 = 1;
-
-                for (let iteration = 0; iteration < remainingScore; iteration++) {
-                    const achievedScore = ((requiredScoreN1 * 1.5) + (requiredScoreN2 * 1.5));
-                    if (achievedScore <= remainingScore) {
-                        requiredScoreN1 = requiredScoreN1 + 1;
-                        requiredScoreN2 = requiredScoreN2 + 1;
-                    }
-                }
-
-                if (requiredScoreN1 > 10 || requiredScoreN2 > 10) {
-                    console.log('Unfortunately, you are already automatically failing the subject.');
-                    return;
-                }
-                console.log(`You need to score at least ${requiredScoreN1} on Score 1.`);
-                console.log(`You need to score at least ${requiredScoreN2} on Score 2.`);
+                console.log(calculateRequiredScores(1.5, 1.5, remainingScoreTotal));
             }
             if (unfilledScores.includes('score3') && unfilledScores.includes('score4')) {
-                let remainingScore = Math.ceil(remainingScoreTotal);
-                let requiredScoreN3 = 1;
-                let requiredScoreN4 = 1;
-
-                for (let iteration = 0; iteration < remainingScore; iteration++) {
-                    const achievedScore = ((requiredScoreN3 * 4) + (requiredScoreN4 * 3));
-                    if (achievedScore <= remainingScore) {
-                        requiredScoreN3 = requiredScoreN3 + 1;
-                        requiredScoreN4 = requiredScoreN4 + 1;
-                    }
-                }
-
-                if (requiredScoreN3 > 10 || requiredScoreN4 > 10) {
-                    console.log('Unfortunately, you are already automatically failing the subject.');
-                    return;
-                }
-
-                console.log(`You need to score at least ${requiredScoreN3} on Score 3.`);
-                console.log(`You need to score at least ${requiredScoreN4} on Score 4.`);
+                console.log(calculateRequiredScores(4, 3, remainingScoreTotal));
             }
             if (unfilledScores.includes('score1') && unfilledScores.includes('score3')) {
-                let remainingScore = Math.ceil(remainingScoreTotal);
-                let requiredScoreN1 = 1;
-                let requiredScoreN3 = 1;
-
-                for (let iteration = 0; iteration < remainingScore; iteration++) {
-                    const achievedScore = ((requiredScoreN1 * 1.5) + (requiredScoreN3 * 4));
-                    if (achievedScore <= remainingScore) {
-                        requiredScoreN1 = requiredScoreN1 + 1;
-                        requiredScoreN3 = requiredScoreN3 + 1;
-                    }
-                }
-
-                if (requiredScoreN1 > 10 || requiredScoreN3 > 10) {
-                    console.log('Unfortunately, you are already automatically failing the subject.');
-                    return;
-                }
-                console.log(`You need to score at least ${requiredScoreN1} on Score 1.`);
-                console.log(`You need to score at least ${requiredScoreN3} on Score 3.`);
+                console.log(calculateRequiredScores(1.5, 4, remainingScoreTotal));
             }
             if (unfilledScores.includes('score2') && unfilledScores.includes('score4')) {
-                let remainingScore = Math.ceil(remainingScoreTotal);
-                let requiredScoreN2 = 1;
-                let requiredScoreN4 = 1;
-
-                for (let iteration = 0; iteration < remainingScore; iteration++) {
-                    const achievedScore = ((requiredScoreN2 * 1.5) + (requiredScoreN4 * 3));
-                    if (achievedScore <= remainingScore) {
-                        requiredScoreN2 = requiredScoreN2 + 1;
-                        requiredScoreN4 = requiredScoreN4 + 1;
-                    }
-                }
-
-                if (requiredScoreN2 > 10 || requiredScoreN4 > 10) {
-                    console.log('Unfortunately, you are already automatically failing the subject.');
-                    return;
-                }
-                console.log(`You need to score at least ${requiredScoreN2} on Score 2.`);
-                console.log(`You need to score at least ${requiredScoreN4} on Score 4.`);
+                console.log(calculateRequiredScores(1.5, 3, remainingScoreTotal));
             }
             if (unfilledScores.includes('score1') && unfilledScores.includes('score4')) {
-                let remainingScore = Math.ceil(remainingScoreTotal);
-                let requiredScoreN1 = 1;
-                let requiredScoreN4 = 1;
-
-                for (let iteration = 0; iteration < remainingScore; iteration++) {
-                    const achievedScore = ((requiredScoreN1 * 1.5) + (requiredScoreN4 * 3));
-                    if (achievedScore <= remainingScore) {
-                        console.log(remainingScore);
-                        requiredScoreN1 = requiredScoreN1 + 1;
-                        requiredScoreN4 = requiredScoreN4 + 1;
-                    }
-                }
-
-                if (requiredScoreN1 > 10 || requiredScoreN4 > 10) {
-                    console.log('Unfortunately, you are already automatically failing the subject.');
-                    return;
-                }
-                console.log(`You need to score at least ${requiredScoreN1} on Score 1.`);
-                console.log(`You need to score at least ${requiredScoreN4} on Score 4.`);
+                console.log(calculateRequiredScores(1.5, 3, remainingScoreTotal));
             }
             if (unfilledScores.includes('score2') && unfilledScores.includes('score3')) {
-                let remainingScore = Math.ceil(remainingScoreTotal);
-                let requiredScoreN2 = 1;
-                let requiredScoreN3 = 1;
-
-                for (let iteration = 0; iteration < remainingScore; iteration++) {
-                    const achievedScore = ((requiredScoreN2 * 1.5) + (requiredScoreN3 * 4));
-                    if (achievedScore <= remainingScore) {
-                        requiredScoreN2 = requiredScoreN2 + 1;
-                        requiredScoreN3 = requiredScoreN3 + 1;
-                    }
-                }
-
-                if (requiredScoreN2 > 10 || requiredScoreN3 > 10) {
-                    console.log('Unfortunately, you are already automatically failing the subject.');
-                    return;
-                }
-                console.log(`You need to score at least ${requiredScoreN2} on Score 2.`);
-                console.log(`You need to score at least ${requiredScoreN3} on Score 3.`);
+                console.log(calculateRequiredScores(1.5, 4, remainingScoreTotal));
             }
         }
     }
 }
 
+function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
+    const remainingScoreCeiled = Math.ceil(remainingScoreTotal);
 
+    let requiredScore1 = 1;
+    let requiredScore2 = 1;
+
+    for (let iteration = 0; iteration < remainingScoreCeiled; iteration++) {
+        const achievedScore = ((requiredScore1 * weigth1) + (requiredScore2 * weigth2));
+
+        if (achievedScore <= remainingScoreCeiled) {
+            requiredScore1 = requiredScore1 + 1;
+            requiredScore2 = requiredScore2 + 1;
+        }
+    }
+
+    if (requiredScore1 > 10) {
+        return 'Unfortunately, you are already automatically failing the subject.';
+    } else {
+        return `$These are the 2 scores ${requiredScore1} and ${requiredScore2}`;
+    }
+}
