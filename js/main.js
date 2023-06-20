@@ -69,9 +69,9 @@ function calculateSubjectStatus() {
         calculatedAverage = ((score1 * 1.5) + (score2 * 1.5) + (score3 * 4) + (score4 * 3)) / 10;
 
         if (calculatedAverage >= 7) {
-            subjectObjConstructor(scoreArray, 'Você foi aprovado na diciplina.', calculatedAverage, inputSubjectName);
+            buildSubjectObject(scoreArray, 'Você foi aprovado na diciplina.', calculatedAverage, inputSubjectName);
         } else {
-            subjectObjConstructor(scoreArray, 'Infelizmente você não atingiu os pontos necessários na diciplina.', calculatedAverage, inputSubjectName);
+            buildSubjectObject(scoreArray, 'Infelizmente você não atingiu os pontos necessários na diciplina.', calculatedAverage, inputSubjectName);
         }
     } else {
         const filledScores = [];
@@ -101,35 +101,35 @@ function calculateSubjectStatus() {
                 const missingScore = Math.ceil(remainingScoreTotal / divisor);
 
                 if (missingScore <= 10) {
-                    subjectObjConstructor(scoreArray, `Você precisa tirar pelo menos ${Math.ceil(remainingScoreTotal / divisor)} na nota ${score}.`, calculatedAverage, inputSubjectName, true);
+                    buildSubjectObject(scoreArray, `Você precisa tirar pelo menos ${Math.ceil(remainingScoreTotal / divisor)} na nota ${score}.`, calculatedAverage, inputSubjectName, true);
                 } else {
-                    subjectObjConstructor(scoreArray, `Infelizmente você não ira atingir os pontos necessários na diciplina.`, calculatedAverage, inputSubjectName, false);
+                    buildSubjectObject(scoreArray, `Infelizmente você não ira atingir os pontos necessários na diciplina.`, calculatedAverage, inputSubjectName, false);
                 }
             });
         } else {
             if (unfilledScores.includes('score1') && unfilledScores.includes('score2')) {
                 const calculateResponse = calculateRequiredScores(1.5, 1.5, remainingScoreTotal);
-                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score3') && unfilledScores.includes('score4')) {
                 const calculateResponse = calculateRequiredScores(4, 3, remainingScoreTotal);
-                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score1') && unfilledScores.includes('score3')) {
                 const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
-                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score2') && unfilledScores.includes('score4')) {
                 const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
-                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score1') && unfilledScores.includes('score4')) {
                 const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
-                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
             if (unfilledScores.includes('score2') && unfilledScores.includes('score3')) {
                 const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
-                subjectObjConstructor(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
             }
         }
     }
@@ -157,7 +157,7 @@ function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
     }
 }
 
-function subjectObjConstructor(scores, statusMessage, averageValue, subjectName, isHolding) {
+function buildSubjectObject(scores, statusMessage, averageValue, subjectName, isHolding) {
     const subjectObj = {
         name: subjectName,
         scores: {
@@ -173,8 +173,6 @@ function subjectObjConstructor(scores, statusMessage, averageValue, subjectName,
     };
     console.log(subjectObj);
 }
-
-
 
 function validateForm() {
 

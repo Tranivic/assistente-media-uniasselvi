@@ -50,26 +50,41 @@ body {
   display: flex;
   width: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   padding: 3rem 0;
 }
+
 .page > main > .form-container {
-  width: 100%;
-  background-color: red;
+  padding-top: 5rem;
+  width: 50%;
+  background-color: blueviolet;
   background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
+.page > main > .page-divisor {
+  width: 0.3rem;
+  height: 60rem;
+  background-color: var(--main-white);
+}
+.page > main > .list-container {
+  display: flex;
+  height: 65rem;
+  width: 50%;
+  flex-direction: column;
+  align-items: center;
+}
 .page > main > .form-container > h1 {
   font-family: var(--title-font);
-  font-size: 2rem;
+  font-size: 4rem;
 }
 .page > main > .form-container > h2 {
   font-family: var(--base-font);
   font-size: 1.5rem;
   padding-top: 1rem;
+  text-align: center;
 }
 
 .page > main > .form-container > form {
@@ -102,6 +117,52 @@ body {
   width: 100%;
   padding: 1rem;
 }
+.page > main > .list-container > h1 {
+  font-family: var(--title-font);
+  font-size: 4rem;
+}
+.page > main > .list-container > ul {
+  margin-top: 4rem;
+  /* overflow-y: scroll;
+  overflow-x: hidden; */
+  width: 50%;
+  padding: 0 2rem;
+}
+
+.page > main > .list-container > ul > li {
+  margin: 2rem 0;
+  font-family: var(--base-font);
+  padding: 0.5rem 0;
+  background-color: var(--secondary-black);
+  border-radius: 1.5rem;
+  padding: 1.5rem 6rem;
+  font-size: 1.5rem;
+}
+.page > main > .list-container > ul > li > h1 {
+  font-size: 2rem;
+  padding: 1rem 0;
+}
+
+.page > main > .list-container > ul > li > h2 {
+  font-size: 1.7rem;
+  padding-top: 2rem;
+}
+
+.page > main > .list-container > ul > li > .score-list {
+  display: flex;
+  flex-direction: column;
+}
+.page > main > .list-container > ul > li > .score-list > li {
+  display: flex;
+  padding: 0.5rem 0;
+}
+.page > main > .list-container > ul > li > .score-list > li > span {
+  padding-left: 1rem;
+}
+.page > footer {
+  background-color: var(--main-yellow);
+  width: 100%;
+}
 /* modal-related */
 .modal {
   position: absolute;
@@ -109,7 +170,7 @@ body {
   height: 100vh;
   align-items: center;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   background-color: var(--main-black);
   z-index: 1000;
 }
