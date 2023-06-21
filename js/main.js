@@ -1,28 +1,37 @@
 // Imports
-import { saveDataOnLocalStorage, readLocalStorageData } from './modules/localStorage.js';
+
+import { saveDataOnLocalStorage, readLocalStorageData, clearLocalStorageData } from './modules/localStorage.js';
 
 // DOM Global Variables
+
 const displayedNameDOM = document.getElementById('user-name');
 const subjectFormDOM = document.getElementById('subject-form');
 const subjectListDOM = document.getElementById('saved-subjects-list');
 const clearListButton = document.getElementById('clear-btn');
 
 // Global variables
+
 let userName = null;
 let lastSubjectObj = {};
 const subjectList = [];
 
 // Modal variables
+
 const modalForm = document.getElementById('modal-form');
 const modalInputName = document.getElementById('modal-input-name');
 
 // Event Listeners
+
 window.addEventListener('load', checkUser);
 modalForm.addEventListener('submit', submitName);
 subjectFormDOM.addEventListener('submit', submitSubject);
 clearListButton.addEventListener('click', clearSubjectList);
 
+
 // Functions
+
+
+// Modal --------------
 function submitName(event) {
     setModalVisibility(false);
     event.preventDefault();
@@ -30,6 +39,7 @@ function submitName(event) {
     saveDataOnLocalStorage('userName', newUserName);
     userName = newUserName;
     setUsernameOnScreen();
+    saveDataOnLocalStorage();
 }
 function checkUser() {
     const localStorageName = readLocalStorageData('userName');
@@ -52,12 +62,12 @@ function setModalVisibility(isVisible) {
 function setUsernameOnScreen() {
     displayedNameDOM.innerText = userName;
 }
+// --------------------
+
 function submitSubject(event) {
     event.preventDefault();
     calculateSubjectStatus();
-    clearAllInputs();
 }
-
 function calculateSubjectStatus() {
     const inputSubjectName = document.getElementById('subject-name').value;
     const score1 = parseInt(document.getElementById('score-1').value);
@@ -101,68 +111,70 @@ function calculateSubjectStatus() {
         const sumOfScores = filledScores.reduce((total, number) => total + number, 0);
         const remainingScoreTotal = Math.ceil(Math.abs(sumOfScores - 70));
 
-
-        if (unfilledScores.length === 1) {
-            const score = unfilledScores[0];
-            const scoreFormatedName = score.replace('score', 'AV ');
-            const i = parseInt(score.replace('score', '')) - 1;
-            const divisor = [1.5, 1.5, 4, 3][i];
-            const missingScore = Math.ceil(remainingScoreTotal / divisor);
-
-            if (missingScore <= 10 && missingScore > 0) {
-                const createdObject = buildSubjectObject(scoreArray, `Você precisa tirar pelo menos ${missingScore} na nota da ${scoreFormatedName}.`, calculatedAverage, inputSubjectName, true);
-                populateSubjectList(createdObject);
-                return;
-            }
-            if (missingScore > 10) {
-                const createdObject = buildSubjectObject(scoreArray, `Infelizmente você não irá atingir os pontos necessários na disciplina.`, calculatedAverage, inputSubjectName, false);
-                populateSubjectList(createdObject);
-                return;
-            }
-            if (missingScore === 0) {
-                const createdObject = buildSubjectObject(scoreArray, `Você tecnicamente já passou na diciplina, porem precisa tirar pelo menos 1 na nota da ${scoreFormatedName}.`, calculatedAverage, inputSubjectName, true);
-                populateSubjectList(createdObject);
-                return;
-            }
-
-
+        if (filledScores.length === 1) {
+            alert('Preencha pelo menos 2 campos de nota');
         } else {
-            if (unfilledScores.includes('score1') && unfilledScores.includes('score2')) {
-                const calculateResponse = calculateRequiredScores(1.5, 1.5, remainingScoreTotal);
-                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
-                populateSubjectList(createdObject);
+            if (unfilledScores.length === 1) {
+                const score = unfilledScores[0];
+                const scoreFormatedName = score.replace('score', 'AV ');
+                const i = parseInt(score.replace('score', '')) - 1;
+                const divisor = [1.5, 1.5, 4, 3][i];
+                const missingScore = Math.ceil(remainingScoreTotal / divisor);
+
+                if (missingScore <= 10 && missingScore > 0) {
+                    const createdObject = buildSubjectObject(scoreArray, `Você precisa tirar pelo menos ${missingScore} na nota da ${scoreFormatedName}.`, calculatedAverage, inputSubjectName, true);
+                    populateSubjectList(createdObject);
+                    return;
+                }
+                if (missingScore > 10) {
+                    const createdObject = buildSubjectObject(scoreArray, `Infelizmente você não irá atingir os pontos necessários na disciplina.`, calculatedAverage, inputSubjectName, false);
+                    populateSubjectList(createdObject);
+                    return;
+                }
+                if (missingScore === 0) {
+                    const createdObject = buildSubjectObject(scoreArray, `Você tecnicamente já passou na diciplina, porem precisa tirar pelo menos 1 na nota da ${scoreFormatedName}.`, calculatedAverage, inputSubjectName, true);
+                    populateSubjectList(createdObject);
+                    return;
+                }
+
+
+            } else {
+                if (unfilledScores.includes('score1') && unfilledScores.includes('score2')) {
+                    const calculateResponse = calculateRequiredScores(1.5, 1.5, remainingScoreTotal);
+                    const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                    populateSubjectList(createdObject);
+                }
+                if (unfilledScores.includes('score3') && unfilledScores.includes('score4')) {
+                    const calculateResponse = calculateRequiredScores(4, 3, remainingScoreTotal);
+                    const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                    populateSubjectList(createdObject);
+                }
+                if (unfilledScores.includes('score1') && unfilledScores.includes('score3')) {
+                    const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
+                    const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                    populateSubjectList(createdObject);
+                }
+                if (unfilledScores.includes('score2') && unfilledScores.includes('score4')) {
+                    const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
+                    const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                    populateSubjectList(createdObject);
+                }
+                if (unfilledScores.includes('score1') && unfilledScores.includes('score4')) {
+                    const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
+                    const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                    populateSubjectList(createdObject);
+                }
+                if (unfilledScores.includes('score2') && unfilledScores.includes('score3')) {
+                    const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
+                    const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                    populateSubjectList(createdObject);
+                }
             }
-            if (unfilledScores.includes('score3') && unfilledScores.includes('score4')) {
-                const calculateResponse = calculateRequiredScores(4, 3, remainingScoreTotal);
-                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
-                populateSubjectList(createdObject);
-            }
-            if (unfilledScores.includes('score1') && unfilledScores.includes('score3')) {
-                const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
-                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
-                populateSubjectList(createdObject);
-            }
-            if (unfilledScores.includes('score2') && unfilledScores.includes('score4')) {
-                const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
-                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
-                populateSubjectList(createdObject);
-            }
-            if (unfilledScores.includes('score1') && unfilledScores.includes('score4')) {
-                const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
-                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
-                populateSubjectList(createdObject);
-            }
-            if (unfilledScores.includes('score2') && unfilledScores.includes('score3')) {
-                const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
-                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
-                populateSubjectList(createdObject);
-            }
+            clearAllInputs();
         }
-
     }
+
 }
-
-
 function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
     const remainingScoreCeiled = Math.ceil(remainingScoreTotal);
 
@@ -184,7 +196,6 @@ function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
         return { message: `Voce precisa tirar ${requiredScore1} e ${requiredScore2} nas avaliações não feitas.`, toHold: true };
     }
 }
-
 function applyOverflow() {
     var isOverflowing = subjectListDOM.scrollWidth > subjectListDOM.clientWidth || subjectListDOM.scrollHeight > subjectListDOM.clientHeight;
     if (isOverflowing) {
@@ -193,7 +204,6 @@ function applyOverflow() {
         subjectListDOM.style.overflow = "auto";
     }
 }
-
 function buildSubjectObject(scores, statusMessage, averageValue, subjectName, isHolding) {
     const subjectObj = {
         name: subjectName,
@@ -210,12 +220,10 @@ function buildSubjectObject(scores, statusMessage, averageValue, subjectName, is
     };
     return subjectObj;
 }
-
 function populateSubjectList(object) {
     subjectList.push(object);
     renderSubjectList();
 }
-
 function renderSubjectList() {
     subjectListDOM.innerHTML = '';
 
@@ -265,21 +273,17 @@ function renderSubjectList() {
     // Aply overflow if needed
     applyOverflow();
 }
-
 function clearAllInputs() {
     const inputs = document.querySelectorAll('input');
     inputs.forEach((input) => {
         input.value = '';
     });
-    console.log(inputs);
 }
-
 function clearSubjectList() {
     subjectList.splice(0, subjectList.length);
     subjectListDOM.innerHTML = '';
     changeClearBtnState();
 }
-
 function changeClearBtnState() {
     if (subjectList.length > 0) {
         clearListButton.classList.toggle('show', true);
@@ -288,4 +292,8 @@ function changeClearBtnState() {
         clearListButton.classList.toggle('show', false);
         clearListButton.classList.toggle('hide', true);
     }
+}
+
+function validateInputFields() {
+
 }
