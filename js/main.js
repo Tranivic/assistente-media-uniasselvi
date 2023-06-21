@@ -2,12 +2,14 @@
 import { saveDataOnLocalStorage, readLocalStorageData } from './modules/localStorage.js';
 
 // DOM Global Variables
-const displayedName = document.getElementById('user-name');
-const subjectForm = document.getElementById('subject-form');
+const displayedNameDOM = document.getElementById('user-name');
+const subjectFormDOM = document.getElementById('subject-form');
+const subjectListDOM = document.getElementById('saved-subjects-list');
 
 // Global variables
 let userName = null;
 let lastSubjectObj = {};
+const subjectList = [];
 
 // Modal variables
 const modalForm = document.getElementById('modal-form');
@@ -16,7 +18,7 @@ const modalInputName = document.getElementById('modal-input-name');
 // Event Listeners
 window.addEventListener('load', checkUser);
 modalForm.addEventListener('submit', submitName);
-subjectForm.addEventListener('submit', submitSubject);
+subjectFormDOM.addEventListener('submit', submitSubject);
 
 // Functions
 function submitName(event) {
@@ -46,7 +48,7 @@ function setModalVisibility(isVisible) {
     modal.classList.toggle('hidden', !isVisible);
 }
 function setUsernameOnScreen() {
-    displayedName.innerText = userName;
+    displayedNameDOM.innerText = userName;
 }
 function submitSubject(event) {
     event.preventDefault();
@@ -69,9 +71,11 @@ function calculateSubjectStatus() {
         calculatedAverage = ((score1 * 1.5) + (score2 * 1.5) + (score3 * 4) + (score4 * 3)) / 10;
 
         if (calculatedAverage >= 7) {
-            buildSubjectObject(scoreArray, 'Você foi aprovado na diciplina.', calculatedAverage, inputSubjectName);
+            const createdObject = buildSubjectObject(scoreArray, 'Você foi aprovado na diciplina.', calculatedAverage, inputSubjectName);
+            populateSubjectList(createdObject);
         } else {
-            buildSubjectObject(scoreArray, 'Infelizmente você não atingiu os pontos necessários na diciplina.', calculatedAverage, inputSubjectName);
+            const createdObject = buildSubjectObject(scoreArray, 'Infelizmente você não atingiu os pontos necessários na diciplina.', calculatedAverage, inputSubjectName);
+            populateSubjectList(createdObject);
         }
     } else {
         const filledScores = [];
@@ -94,46 +98,68 @@ function calculateSubjectStatus() {
         const sumOfScores = filledScores.reduce((total, number) => total + number, 0);
         const remainingScoreTotal = Math.ceil(Math.abs(sumOfScores - 70));
 
-        if (unfilledScores.length === 1) {
-            unfilledScores.forEach((score) => {
-                const index = score.replace('score', '');
-                const divisor = [1.5, 1.5, 4, 3][index - 1];
-                const missingScore = Math.ceil(remainingScoreTotal / divisor);
 
-                if (missingScore <= 10) {
-                    buildSubjectObject(scoreArray, `Você precisa tirar pelo menos ${Math.ceil(remainingScoreTotal / divisor)} na nota ${score}.`, calculatedAverage, inputSubjectName, true);
-                } else {
-                    buildSubjectObject(scoreArray, `Infelizmente você não ira atingir os pontos necessários na diciplina.`, calculatedAverage, inputSubjectName, false);
-                }
-            });
+        if (unfilledScores.length === 1) {
+            const score = unfilledScores[0];
+            const scoreFormatedName = score.replace('score', 'AV ');
+            const i = parseInt(score.replace('score', '')) - 1;
+            const divisor = [1.5, 1.5, 4, 3][i];
+            const missingScore = Math.ceil(remainingScoreTotal / divisor);
+
+            alert(missingScore);
+
+            if (missingScore <= 10 && missingScore > 0) {
+                const createdObject = buildSubjectObject(scoreArray, `Você precisa tirar pelo menos ${missingScore} na nota da ${scoreFormatedName}.`, calculatedAverage, inputSubjectName, true);
+                populateSubjectList(createdObject);
+                return;
+            }
+            if (missingScore > 10) {
+                const createdObject = buildSubjectObject(scoreArray, `Infelizmente você não irá atingir os pontos necessários na disciplina.`, calculatedAverage, inputSubjectName, false);
+                populateSubjectList(createdObject);
+                return;
+            }
+            if (missingScore === 0) {
+                const createdObject = buildSubjectObject(scoreArray, `Você tecnicamente já passou na diciplina, porem precisa tirar pelo menos 1 na nota da ${scoreFormatedName}.`, calculatedAverage, inputSubjectName, true);
+                populateSubjectList(createdObject);
+                return;
+            }
+
+
         } else {
             if (unfilledScores.includes('score1') && unfilledScores.includes('score2')) {
                 const calculateResponse = calculateRequiredScores(1.5, 1.5, remainingScoreTotal);
-                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                populateSubjectList(createdObject);
             }
             if (unfilledScores.includes('score3') && unfilledScores.includes('score4')) {
                 const calculateResponse = calculateRequiredScores(4, 3, remainingScoreTotal);
-                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                populateSubjectList(createdObject);
             }
             if (unfilledScores.includes('score1') && unfilledScores.includes('score3')) {
                 const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
-                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                populateSubjectList(createdObject);
             }
             if (unfilledScores.includes('score2') && unfilledScores.includes('score4')) {
                 const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
-                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                populateSubjectList(createdObject);
             }
             if (unfilledScores.includes('score1') && unfilledScores.includes('score4')) {
                 const calculateResponse = calculateRequiredScores(1.5, 3, remainingScoreTotal);
-                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                populateSubjectList(createdObject);
             }
             if (unfilledScores.includes('score2') && unfilledScores.includes('score3')) {
                 const calculateResponse = calculateRequiredScores(1.5, 4, remainingScoreTotal);
-                buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                const createdObject = buildSubjectObject(scoreArray, calculateResponse.message, calculatedAverage, inputSubjectName, calculateResponse.toHold);
+                populateSubjectList(createdObject);
             }
         }
     }
 }
+
 
 function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
     const remainingScoreCeiled = Math.ceil(remainingScoreTotal);
@@ -160,20 +186,69 @@ function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
 function buildSubjectObject(scores, statusMessage, averageValue, subjectName, isHolding) {
     const subjectObj = {
         name: subjectName,
-        scores: {
-            score1: scores[0],
-            score2: scores[1],
-            score3: scores[2],
-            score4: scores[3],
-        },
+        scores: [
+            scores[0],
+            scores[1],
+            scores[2],
+            scores[3],
+        ],
         average: averageValue,
         statusMsg: statusMessage,
         approved: averageValue >= 7,
         hold: isHolding,
     };
-    console.log(subjectObj);
+    return subjectObj;
 }
 
-function validateForm() {
+function populateSubjectList(object) {
+    subjectList.splice(0, subjectList.length);
+    subjectList.push(object);
+    renderSubjectList();
+}
 
+function renderSubjectList() {
+    subjectList.forEach((element) => {
+        const randomID = parseInt(Math.random() * (1000000 - 100) + 1);
+        const content = `
+        <li class="score-item">
+          <h1>${element.name}</h1>
+          <ul class="score-list" id="score-list-${randomID}">
+          </ul>
+          <h2 id="status-message-${randomID}" class="status-message">
+            <span>${element.statusMsg}</span>
+          </h2>
+        </li>
+      `;
+        subjectListDOM.insertAdjacentHTML('beforeend', content);
+
+        // Generate list of scores
+        const scoreListId = `score-list-${randomID}`;
+        const scoreList = document.getElementById(scoreListId);
+        console.log(scoreList);
+        element.scores.forEach((scoreElement, i) => {
+            if (!isNaN(scoreElement)) {
+                console.log(scoreElement);
+                const liContent = `<li><h3>${i + 1}º AV: </h3><span>${scoreElement}</span></li>`;
+                scoreList.insertAdjacentHTML('beforeend', liContent);
+            } else {
+                console.log(scoreElement);
+                const liContent = `<li><h3>${i + 1}º AV: </h3><span>Avaliação pendente</span></li>`;
+                scoreList.insertAdjacentHTML('beforeend', liContent);
+            }
+        });
+
+        // Paint the status message
+        let statusColorClass = '';
+        if (element.hold) {
+            statusColorClass = 'holding';
+        } else {
+            statusColorClass = element.approved ? 'approved' : 'reproved';
+        }
+        const statusMessageId = `status-message-${randomID}`;
+        const statusMessage = document.getElementById(statusMessageId);
+        statusMessage.classList.add(statusColorClass);
+        console.log(element.hold);
+        console.log(element.average);
+        console.log(element.approved);
+    });
 }

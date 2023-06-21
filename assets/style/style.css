@@ -159,6 +159,16 @@ body {
 .page > main > .list-container > ul > li > .score-list > li > span {
   padding-left: 1rem;
 }
+/* JS Related */
+.status-message.approved {
+  color: green;
+}
+.status-message.reproved {
+  color: red;
+}
+.status-message.holding {
+  color: var(--main-yellow);
+}
 .page > footer {
   background-color: var(--main-yellow);
   width: 100%;
