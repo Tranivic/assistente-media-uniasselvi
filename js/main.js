@@ -13,7 +13,7 @@ const clearListButton = document.getElementById('clear-btn');
 
 let userName = null;
 let lastSubjectObj = {};
-const subjectList = [];
+let subjectList = [];
 
 // Modal variables
 
@@ -24,7 +24,7 @@ const modalInputName = document.getElementById('modal-input-name');
 
 window.addEventListener('load', checkUser);
 modalForm.addEventListener('submit', submitName);
-subjectFormDOM.addEventListener('submit', submitSubject);
+subjectFormDOM.addEventListener('submit', submitSubjectForm);
 clearListButton.addEventListener('click', clearSubjectList);
 
 
@@ -39,11 +39,13 @@ function submitName(event) {
     saveDataOnLocalStorage('userName', newUserName);
     userName = newUserName;
     setUsernameOnScreen();
-    saveDataOnLocalStorage();
 }
 function checkUser() {
-    const localStorageName = readLocalStorageData('userName');
 
+    const localStorageName = readLocalStorageData('userName');
+    const localStorageList = readLocalStorageData('localSubjectList');
+
+    // Local Storage Name
     if (localStorageName) {
         userName = localStorageName;
         setModalVisibility(false);
@@ -53,6 +55,14 @@ function checkUser() {
         userName = null;
     }
 
+    // Local Storage List
+    if (!localStorageList) {
+        saveDataOnLocalStorage('localSubjectList', []);
+    } else {
+        const localSubjectList = readLocalStorageData('localSubjectList');
+        subjectList = localSubjectList;
+        renderSubjectList();
+    }
 }
 function setModalVisibility(isVisible) {
     const modal = document.getElementById('modal');
@@ -64,7 +74,7 @@ function setUsernameOnScreen() {
 }
 // --------------------
 
-function submitSubject(event) {
+function submitSubjectForm(event) {
     event.preventDefault();
     calculateSubjectStatus();
 }
@@ -220,11 +230,17 @@ function buildSubjectObject(scores, statusMessage, averageValue, subjectName, is
     };
     return subjectObj;
 }
+
 function populateSubjectList(object) {
     subjectList.push(object);
+    saveDataOnLocalStorage('localSubjectList', subjectList);
     renderSubjectList();
 }
+
 function renderSubjectList() {
+    const localSubjectList = readLocalStorageData('localSubjectList');
+    subjectList = localSubjectList;
+
     subjectListDOM.innerHTML = '';
 
     subjectList.forEach((element) => {
@@ -283,6 +299,7 @@ function clearSubjectList() {
     subjectList.splice(0, subjectList.length);
     subjectListDOM.innerHTML = '';
     changeClearBtnState();
+    saveDataOnLocalStorage('localSubjectList', []);
 }
 function changeClearBtnState() {
     if (subjectList.length > 0) {
@@ -292,8 +309,4 @@ function changeClearBtnState() {
         clearListButton.classList.toggle('show', false);
         clearListButton.classList.toggle('hide', true);
     }
-}
-
-function validateInputFields() {
-
 }
