@@ -55,6 +55,7 @@ function setUsernameOnScreen() {
 function submitSubject(event) {
     event.preventDefault();
     calculateSubjectStatus();
+    clearAllInputs();
 }
 
 function calculateSubjectStatus() {
@@ -159,7 +160,6 @@ function calculateSubjectStatus() {
         }
 
     }
-    clearAllInputs();
 }
 
 
@@ -193,6 +193,7 @@ function applyOverflow() {
         subjectListDOM.style.overflow = "auto";
     }
 }
+
 function buildSubjectObject(scores, statusMessage, averageValue, subjectName, isHolding) {
     const subjectObj = {
         name: subjectName,
@@ -270,7 +271,7 @@ function clearAllInputs() {
     inputs.forEach((input) => {
         input.value = '';
     });
-
+    console.log(inputs);
 }
 
 function clearSubjectList() {
