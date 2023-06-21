@@ -1,0 +1,18 @@
+@media only screen and (max-width: 1232px) {
+  /* Page */
+  .page > header {
+    height: 100%;
+  }
+  .page > main {
+    flex-direction: column;
+  }
+  .page > main > .page-divisor {
+    margin: 2rem;
+    height: 4rem;
+  }
+
+  /* Subject List */
+  .page > main > .list-container {
+    width: 100%;
+  }
+}
