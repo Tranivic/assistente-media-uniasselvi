@@ -106,7 +106,15 @@ body {
   margin-top: 1rem;
   border-radius: 0.5rem;
   align-self: center;
-  padding: 1rem;
+  padding: 1.5rem;
+  border: none;
+  background-color: var(--main-yellow);
+  color: var(--main-black);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.page > main > .form-container > form > button:hover {
+  transform: scale(1.1);
 }
 .page > main > .form-container > form > input {
   font-family: var(--base-font);
@@ -123,12 +131,29 @@ body {
 }
 .page > main > .list-container > ul {
   margin-top: 4rem;
-  /* overflow-y: scroll;
-  overflow-x: hidden; */
   width: 50%;
   padding: 0 2rem;
 }
-
+.page > main > .list-container > button {
+  font-family: var(--base-font);
+  color: var(--main-white);
+  background-color: rgb(224, 42, 42);
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+/* Javascript related */
+.page > main > .list-container > button.show {
+  display: block;
+}
+.page > main > .list-container > button.hide {
+  display: none;
+}
+/*  */
+.page > main > .list-container > button:hover {
+  transform: scale(1.1);
+}
 .page > main > .list-container > ul > li {
   margin: 2rem 0;
   font-family: var(--base-font);
@@ -168,10 +193,6 @@ body {
 }
 .status-message.holding {
   color: var(--main-yellow);
-}
-.page > footer {
-  background-color: var(--main-yellow);
-  width: 100%;
 }
 /* modal-related */
 .modal {

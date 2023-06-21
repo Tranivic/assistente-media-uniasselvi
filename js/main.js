@@ -5,6 +5,7 @@ import { saveDataOnLocalStorage, readLocalStorageData } from './modules/localSto
 const displayedNameDOM = document.getElementById('user-name');
 const subjectFormDOM = document.getElementById('subject-form');
 const subjectListDOM = document.getElementById('saved-subjects-list');
+const clearListButton = document.getElementById('clear-btn');
 
 // Global variables
 let userName = null;
@@ -19,6 +20,7 @@ const modalInputName = document.getElementById('modal-input-name');
 window.addEventListener('load', checkUser);
 modalForm.addEventListener('submit', submitName);
 subjectFormDOM.addEventListener('submit', submitSubject);
+clearListButton.addEventListener('click', clearSubjectList);
 
 // Functions
 function submitName(event) {
@@ -71,10 +73,10 @@ function calculateSubjectStatus() {
         calculatedAverage = ((score1 * 1.5) + (score2 * 1.5) + (score3 * 4) + (score4 * 3)) / 10;
 
         if (calculatedAverage >= 7) {
-            const createdObject = buildSubjectObject(scoreArray, 'Você foi aprovado na diciplina.', calculatedAverage, inputSubjectName);
+            const createdObject = buildSubjectObject(scoreArray, `Você foi aprovado na diciplina com uma média de ${calculatedAverage}.`, calculatedAverage, inputSubjectName);
             populateSubjectList(createdObject);
         } else {
-            const createdObject = buildSubjectObject(scoreArray, 'Infelizmente você não atingiu os pontos necessários na diciplina.', calculatedAverage, inputSubjectName);
+            const createdObject = buildSubjectObject(scoreArray, `Você foi reprovado na diciplina com uma média de ${calculatedAverage}.`, calculatedAverage, inputSubjectName);
             populateSubjectList(createdObject);
         }
     } else {
@@ -105,8 +107,6 @@ function calculateSubjectStatus() {
             const i = parseInt(score.replace('score', '')) - 1;
             const divisor = [1.5, 1.5, 4, 3][i];
             const missingScore = Math.ceil(remainingScoreTotal / divisor);
-
-            alert(missingScore);
 
             if (missingScore <= 10 && missingScore > 0) {
                 const createdObject = buildSubjectObject(scoreArray, `Você precisa tirar pelo menos ${missingScore} na nota da ${scoreFormatedName}.`, calculatedAverage, inputSubjectName, true);
@@ -157,7 +157,9 @@ function calculateSubjectStatus() {
                 populateSubjectList(createdObject);
             }
         }
+
     }
+    clearAllInputs();
 }
 
 
@@ -183,6 +185,14 @@ function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
     }
 }
 
+function applyOverflow() {
+    var isOverflowing = subjectListDOM.scrollWidth > subjectListDOM.clientWidth || subjectListDOM.scrollHeight > subjectListDOM.clientHeight;
+    if (isOverflowing) {
+        subjectListDOM.style.overflowx = "scroll";
+    } else {
+        subjectListDOM.style.overflow = "auto";
+    }
+}
 function buildSubjectObject(scores, statusMessage, averageValue, subjectName, isHolding) {
     const subjectObj = {
         name: subjectName,
@@ -201,12 +211,13 @@ function buildSubjectObject(scores, statusMessage, averageValue, subjectName, is
 }
 
 function populateSubjectList(object) {
-    subjectList.splice(0, subjectList.length);
     subjectList.push(object);
     renderSubjectList();
 }
 
 function renderSubjectList() {
+    subjectListDOM.innerHTML = '';
+
     subjectList.forEach((element) => {
         const randomID = parseInt(Math.random() * (1000000 - 100) + 1);
         const content = `
@@ -224,14 +235,11 @@ function renderSubjectList() {
         // Generate list of scores
         const scoreListId = `score-list-${randomID}`;
         const scoreList = document.getElementById(scoreListId);
-        console.log(scoreList);
         element.scores.forEach((scoreElement, i) => {
             if (!isNaN(scoreElement)) {
-                console.log(scoreElement);
                 const liContent = `<li><h3>${i + 1}º AV: </h3><span>${scoreElement}</span></li>`;
                 scoreList.insertAdjacentHTML('beforeend', liContent);
             } else {
-                console.log(scoreElement);
                 const liContent = `<li><h3>${i + 1}º AV: </h3><span>Avaliação pendente</span></li>`;
                 scoreList.insertAdjacentHTML('beforeend', liContent);
             }
@@ -247,8 +255,36 @@ function renderSubjectList() {
         const statusMessageId = `status-message-${randomID}`;
         const statusMessage = document.getElementById(statusMessageId);
         statusMessage.classList.add(statusColorClass);
-        console.log(element.hold);
-        console.log(element.average);
-        console.log(element.approved);
+
+
+        // Render clear btn
+        changeClearBtnState();
     });
+
+    // Aply overflow if needed
+    applyOverflow();
+}
+
+function clearAllInputs() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach((input) => {
+        input.value = '';
+    });
+
+}
+
+function clearSubjectList() {
+    subjectList.splice(0, subjectList.length);
+    subjectListDOM.innerHTML = '';
+    changeClearBtnState();
+}
+
+function changeClearBtnState() {
+    if (subjectList.length > 0) {
+        clearListButton.classList.toggle('show', true);
+        clearListButton.classList.toggle('hide', false);
+    } else {
+        clearListButton.classList.toggle('show', false);
+        clearListButton.classList.toggle('hide', true);
+    }
 }
