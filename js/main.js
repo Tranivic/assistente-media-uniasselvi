@@ -99,6 +99,7 @@ function calculateSubjectStatus() {
             const createdObject = buildSubjectObject(scoreArray, `Você foi reprovado na diciplina com uma média de ${calculatedAverage}.`, calculatedAverage, inputSubjectName);
             populateSubjectList(createdObject);
         }
+        clearAllInputs();
     } else {
         const filledScores = [];
         const unfilledScores = [];
@@ -123,6 +124,7 @@ function calculateSubjectStatus() {
         if (filledScores.length <= 1) {
             alert('Preencha pelo menos 2 campos de nota');
         } else {
+            clearAllInputs();
             if (unfilledScores.length === 1) {
                 const score = unfilledScores[0];
                 const scoreFormatedName = score.replace('score', 'AV ');
@@ -179,7 +181,6 @@ function calculateSubjectStatus() {
                     populateSubjectList(createdObject);
                 }
             }
-            clearAllInputs();
         }
     }
 
@@ -202,7 +203,7 @@ function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
     if (requiredScore1 > 10) {
         return { message: 'Infelizmente você não ira atingir os pontos necessários na diciplina.', toHold: false };
     } else {
-        return { message: `Voce precisa tirar ${requiredScore1} e ${requiredScore2} nas avaliações não feitas.`, toHold: true };
+        return { message: `Voce precisa tirar uma nota mínima de ${requiredScore1} e ${requiredScore2} nas avaliações pendentes`, toHold: true };
     }
 }
 function applyOverflow() {
