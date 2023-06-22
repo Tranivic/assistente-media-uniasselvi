@@ -59,8 +59,7 @@ function checkUser() {
     if (!localStorageList) {
         saveDataOnLocalStorage('localSubjectList', []);
     } else {
-        const localSubjectList = readLocalStorageData('localSubjectList');
-        subjectList = localSubjectList;
+        subjectList = readLocalStorageData('localSubjectList');
         renderSubjectList();
     }
 }
@@ -121,7 +120,7 @@ function calculateSubjectStatus() {
         const sumOfScores = filledScores.reduce((total, number) => total + number, 0);
         const remainingScoreTotal = Math.ceil(Math.abs(sumOfScores - 70));
 
-        if (filledScores.length === 1) {
+        if (filledScores.length <= 1) {
             alert('Preencha pelo menos 2 campos de nota');
         } else {
             if (unfilledScores.length === 1) {
@@ -238,10 +237,11 @@ function populateSubjectList(object) {
 }
 
 function renderSubjectList() {
+    subjectListDOM.innerHTML = '';
+
     const localSubjectList = readLocalStorageData('localSubjectList');
     subjectList = localSubjectList;
-
-    subjectListDOM.innerHTML = '';
+    console.log(subjectList);
 
     subjectList.forEach((element) => {
         const randomID = parseInt(Math.random() * (1000000 - 100) + 1);
@@ -261,11 +261,11 @@ function renderSubjectList() {
         const scoreListId = `score-list-${randomID}`;
         const scoreList = document.getElementById(scoreListId);
         element.scores.forEach((scoreElement, i) => {
-            if (!isNaN(scoreElement)) {
-                const liContent = `<li><h3>${i + 1}º AV: </h3><span>${scoreElement}</span></li>`;
+            if (scoreElement === null) {
+                const liContent = `<li><h3>${i + 1}º AV: </h3><span>Avaliação pendente</span></li>`;
                 scoreList.insertAdjacentHTML('beforeend', liContent);
             } else {
-                const liContent = `<li><h3>${i + 1}º AV: </h3><span>Avaliação pendente</span></li>`;
+                const liContent = `<li><h3>${i + 1}º AV: </h3><span>${scoreElement}</span></li>`;
                 scoreList.insertAdjacentHTML('beforeend', liContent);
             }
         });
