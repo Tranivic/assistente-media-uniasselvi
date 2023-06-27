@@ -1,34 +1,27 @@
 // Imports
-
-import { saveDataOnLocalStorage, readLocalStorageData, clearLocalStorageData } from './modules/localStorage.js';
+import { saveDataOnLocalStorage, readLocalStorageData } from './modules/localStorage.js';
 
 // DOM Global Variables
-
 const displayedNameDOM = document.getElementById('user-name');
 const subjectFormDOM = document.getElementById('subject-form');
 const subjectListDOM = document.getElementById('saved-subjects-list');
 const clearListButton = document.getElementById('clear-btn');
 
 // Global variables
-
 let userName = null;
 let lastSubjectObj = {};
 let subjectList = [];
 
 // Modal variables
-
 const modalForm = document.getElementById('modal-form');
 const modalInputName = document.getElementById('modal-input-name');
 
 // Event Listeners
-
 window.addEventListener('load', checkUser);
 modalForm.addEventListener('submit', submitName);
 subjectFormDOM.addEventListener('submit', submitSubjectForm);
 clearListButton.addEventListener('click', clearSubjectList);
 
-
-// Functions
 
 
 // Modal --------------
@@ -73,6 +66,7 @@ function setUsernameOnScreen() {
 }
 // --------------------
 
+// Functions
 function submitSubjectForm(event) {
     event.preventDefault();
     calculateSubjectStatus();
@@ -185,6 +179,7 @@ function calculateSubjectStatus() {
     }
 
 }
+
 function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
     const remainingScoreCeiled = Math.ceil(remainingScoreTotal);
 
@@ -206,6 +201,7 @@ function calculateRequiredScores(weigth1, weigth2, remainingScoreTotal) {
         return { message: `Voce precisa tirar uma nota mínima de ${requiredScore1} e ${requiredScore2} nas avaliações pendentes`, toHold: true };
     }
 }
+
 function applyOverflow() {
     var isOverflowing = subjectListDOM.scrollWidth > subjectListDOM.clientWidth || subjectListDOM.scrollHeight > subjectListDOM.clientHeight;
     if (isOverflowing) {
@@ -230,13 +226,11 @@ function buildSubjectObject(scores, statusMessage, averageValue, subjectName, is
     };
     return subjectObj;
 }
-
 function populateSubjectList(object) {
     subjectList.push(object);
     saveDataOnLocalStorage('localSubjectList', subjectList);
     renderSubjectList();
 }
-
 function renderSubjectList() {
     subjectListDOM.innerHTML = '';
 

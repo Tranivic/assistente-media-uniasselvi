@@ -102,6 +102,10 @@ body {
   padding: 4rem 8rem;
   width: 40%;
 }
+.page > main > .form-container > form > span {
+  font-size: 1.5rem;
+  filter: brightness(60%);
+}
 .page > main > .form-container > form > button {
   margin-top: 1rem;
   border-radius: 0.5rem;
